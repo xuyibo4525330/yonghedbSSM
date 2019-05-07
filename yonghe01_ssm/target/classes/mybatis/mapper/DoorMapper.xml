@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 门店表的映射文件 namespace值为对应====接口的全路径=== -->
+<mapper namespace="com.tedu.dao.DoorMapper">
+
+	<!-- 1.查询所有门店信息，id值为对应接口中方法的名字 resultType指定将查询的结果封装到哪个pojo对象中 <>如果查询的结果是单条记录,应该封装一个Door对象中,因此resultType的值是com.tedu.pojo.Door 
+		<>如果查询的结果是多条记录,应该封装到一个List<Door>集合中,, 此时resultType的值是集合中的泛型,也就是com.tedu.pojo.Door -->
+	<select id="findAll" resultType="com.tedu.pojo.Door">
+		select * from tb_door
+	</select>
+
+	<!-- 删除门店 -->
+	<delete id="deleteById">
+		delete from tb_door
+		where id=#{id}
+	</delete>
+
+	<!-- 添加门店 -->
+	<insert id="addDoor">
+		insert into tb_door
+		values(#{id}, #{name}, #{tel}, #{addr})
+	</insert>
+
+
+	<!-- 根据ID查询门店信息 -->
+	<select id="findById" resultType="com.tedu.pojo.Door">
+		select * from tb_door
+		where id=#{id}
+	</select>
+
+	<!-- 根据Id修改门店信息 -->
+	<update id="updateById">       
+		update tb_door set name=#{name},tel=#{tel},addr=#{addr}
+		where id=#{id}
+	</update>
+</mapper>

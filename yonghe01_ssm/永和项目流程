@@ -1,0 +1,144 @@
+1.创建Maven web项目
+2.导入数据库和引入数据
+3.引入WEB-INF包和web.xml
+4.创建包  main----packge   resouces
+
+5.配置环境
+	
+	1)配置pom核心配置文件    
+		*<!-- 集中定义依赖版本号 -->
+	<properties>
+	<junit.version>4.10</junit.version>
+	<spring.version>4.1.3.RELEASE</spring.version>
+	<mybatis.version>3.2.8</mybatis.version>
+	<mybatis.spring.version>1.2.2</mybatis.spring.version>
+	<mysql.version>5.1.32</mysql.version>
+	<druid.version>1.1.6</druid.version>
+	<slf4j.version>1.6.4</slf4j.version>
+	<jstl.version>1.2</jstl.version>
+	<servlet-api.version>2.5</servlet-api.version>
+	<jsp-api.version>2.0</jsp-api.version>
+	<jackson.version>2.4.2</jackson.version>
+	</properties>
+		
+		*<!-- 单元测试 -->
+		<dependencies>
+			<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+			</dependency>
+		</dependencies>
+		
+		*<!-- 引入spring的依赖包-->
+		<!-- 整合spring框架（包含springmvc）
+			这个jar文件包含springmvc开发时的核心类, 同时也会将依赖的相关jar文件引入进来(spring的核心jar文件也包含在内)
+		 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!--这个jar文件包含对Spring对JDBC数据访问进行封装的所有类 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+调试=====调试spring整合
+
+		=====<!--整合springmvc-config.xml-->========
+		<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+						http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/context
+          				http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<!-- 1.配置注解驱动，用于识别注解（比如@Controller） -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<!-- 2.配置需要扫描的包：spring自动去扫描 base-package 下的类，
+		如果扫描到的类上有 @Controller、@Service、@Component等注解，
+		将会自动将类注册bean对象 
+	 -->
+	<context:component-scan base-package="com.tedu.controller">
+	</context:component-scan>
+	
+	<!-- 3.配置内部资源视图解析器
+		prefix:配置路径前缀
+		suffix:配置文件后缀
+	 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/pages/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+</beans>
+		
+		=========<!-- 在web.xml配置springmvc  -->
+	<!-- 创建springmvc的前端控制器 -->
+	<!-- 配置springmvc,将所有请求交给springmvc来处理 -->
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 指定spring及springmvc配置文件的位置 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring/*.xml</param-value>
+		</init-param>
+	</servlet>
+	<!-- 其中的斜杠( / )表示拦截所有请求, 所有请求都要经过springmvc -->
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 配置springmvc乱码处理过滤器 -->
+	<!-- 乱码处理过滤器 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<!-- 指定编码集 -->
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<!-- 指定拦截方式为拦截所有请求 -->
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

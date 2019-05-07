@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	<!-- 整合spring和mybatis框架	id值是固定值
+		将SqlSession等对象的创建交给Spring容器
+	 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 1.指定mybatis核心配置文件的位置 -->
+		<property name="configLocation" 
+				value="classpath:mybatis/mybatis-config.xml"></property>
+				
+		<!-- 2.配置连接池(数据源) ref指向连接池bean对象的id值 -->
+		<!-- 所有property标签想当一个对象,ref指为另一个对象属性赋值 -->
+		<property name="dataSource" ref="dataSource"></property>
+		
+		<!-- 3、扫描所有的 XxxMapper.xml映射文件，读取其中配置的SQL语句 -->
+		<property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"/>
+		
+	</bean>
+	
+	<!-- 4、定义mapper接口扫描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描所有XxxMapper接口，将接口实例的创建交给spring容器 -->
+		<property name="basePackage" value="com.tedu.dao"/>
+	</bean>
+</beans>

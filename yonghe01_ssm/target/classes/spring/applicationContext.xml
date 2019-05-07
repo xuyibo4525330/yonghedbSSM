@@ -1,0 +1,38 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+
+	<!-- 声明User类的Bean对象 -->
+	<bean id="user" class="com.tedu.pojo.User"></bean>
+	<bean id="order" class="com.tedu.pojo.Order"></bean>
+	
+	<!-- 1.加载jdbc.properties文件的位置,获取连接数据库信息 -->
+	<context:property-placeholder
+		location="classpath:jdbc.properties" />
+	
+	<!-- 2.配置druid连接池 ，id是固定值，class是druid连接池类的全路径 -->
+	<!-- 把连接池对象交给spring容器管理 -->
+	<bean id="dataSource"
+		class="com.alibaba.druid.pool.DruidDataSource">
+		<!-- 配置连接数据库的基本信息 -->
+		<property name="driverClassName" value="${db.driverClassName}"></property>
+		<property name="url" value="${db.url}"></property>
+		<property name="username" value="${db.username}"></property>
+		<property name="password" value="${db.password}"></property>
+	</bean>
+
+	<!-- 3.配置需要扫描的包(service层)：spring自动去扫描 base-package下的类， 如果扫描到的类上有 @Controller、@Service、@Component等注解， 
+		将会自动将类注册为bean（即由spring创建实例） -->
+	<context:component-scan
+		base-package="com.tedu.service"></context:component-scan>
+
+
+</beans>
